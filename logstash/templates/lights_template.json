@@ -1,0 +1,7 @@
+{
+    "template" : "lights_template",
+    "index_patterns" : ["lights-*"],
+    "aliases" : {
+        "lights" : {}
+    }
+}
