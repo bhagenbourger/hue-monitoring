@@ -17,6 +17,9 @@ services:
     image: docker.elastic.co/beats/metricbeat-oss:7.1.1
     volumes:
       - ./metricbeat/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
+    environment:
+      - HUE_HUB_IP=${HUE_HUB_IP}
+      - HUE_API_KEY=${HUE_API_KEY}
     networks: ['elk']
     depends_on: ['logstash']
 
@@ -27,6 +30,8 @@ services:
     volumes:
       - ./logstash/pipeline/:/usr/share/logstash/pipeline/
       - ./logstash/templates/:/usr/share/logstash/templates/
+    environment:
+      - SLACK_ENDPOINT=${SLACK_ENDPOINT}
     networks: ['elk']
     depends_on: ['elasticsearch']
 
