@@ -8,11 +8,11 @@ metricbeat.modules:
 - module: http
   metricsets: 
     - json
-  hosts: ["192.168.0.17"]
+  hosts: ["${HUE_HUB_IP}"]
   namespace: "json_namespace"
   path: "/api/${HUE_API_KEY}/lights"
   method: "GET"
-  period: 10s
+  period: 30s
   enabled: true
 
 processors:
