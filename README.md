@@ -29,9 +29,9 @@ You must have `Docker` installed and a Slack webhook configured to push messages
 
 # Configuration
 You must declare three bash environment variables to run this project:
-    - SLACK_ENDPOINT => the Slack endpoint corresponding to the webhook to push messages into Slack
-    - HUE_API_KEY => your API key to connect to your Philips Hub
-    - HUE_HUB_IP => IP address of your Philips Hub
+- SLACK_ENDPOINT => the Slack endpoint corresponding to the webhook to push messages into Slack
+- HUE_API_KEY => your API key to connect to your Philips Hub
+- HUE_HUB_IP => IP address of your Philips Hub
 
 To manage your configuration you can declare a `env.sh` file which contains your configuration variables. `env.sh` file is ignored by git. 
 Below an example of `env.sh` content:
