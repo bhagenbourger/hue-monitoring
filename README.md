@@ -4,7 +4,7 @@ The goal of this project is to monitor your Philips Hue with the ELK stack and S
 # Description
 This project starts 4 containers corresponding to the ELK stack:
 - one container for `metricbeat`
-- one continer for `logstash` 
+- one container for `logstash` 
 - one container for `elasticsearch`
 - one container for `kibana`
 
