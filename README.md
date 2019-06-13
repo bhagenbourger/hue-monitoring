@@ -32,6 +32,7 @@ You must declare three bash environment variables to run this project:
 - SLACK_ENDPOINT => the Slack endpoint corresponding to the webhook to push messages into Slack
 - HUE_API_KEY => your API key to connect to your Philips Hub
 - HUE_HUB_IP => IP address of your Philips Hub
+- ES01_DATA_FOLDER => Path of the folder in which elasticsearch data is persisted
 
 To manage your configuration you can declare a `env.sh` file which contains your configuration variables. `env.sh` file is ignored by git. 
 Below an example of `env.sh` content:
@@ -39,6 +40,7 @@ Below an example of `env.sh` content:
 export SLACK_ENDPOINT="<set slack webhook url>"
 export HUE_API_KEY="<set your API KEY>"
 export HUE_HUB_IP="<set your hub IP>"
+export ES01_DATA_FOLDER="<set elasticsearch data persistence folder>"
 ```
 
 After creating your `env.sh` file, you have to source it in your bash session : `source env.sh`.
