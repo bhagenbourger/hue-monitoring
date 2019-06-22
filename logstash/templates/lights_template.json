@@ -3,5 +3,15 @@
     "index_patterns" : ["lights-*"],
     "aliases" : {
         "lights" : {}
+    },
+    "mappings": {
+        "properties": {
+            "state.on": {
+                "type": "keyword"
+            },
+            "state.reachable": {
+                "type": "keyword"
+            }
+        }
     }
 }
