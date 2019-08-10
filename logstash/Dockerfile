@@ -1,4 +1,4 @@
-FROM docker.elastic.co/logstash/logstash-oss:7.1.1
+FROM docker.elastic.co/logstash/logstash-oss:7.3.0
 
 COPY plugins/logstash-filter-java_filter_hue-0.1.0.gem /usr/share/logstash/plugins/logstash-filter-java_filter_hue-0.1.0.gem
 
