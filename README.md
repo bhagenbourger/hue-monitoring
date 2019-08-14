@@ -22,7 +22,13 @@ Indicies and alias are created by `logstash`.
 Elasticsearch can be queried at `http://localhost:9200`.
 
 ### Kibana
-Kibana is connected to Elasticsearch to query data and available at `http://localhost:5601`. No configuration is provided is this project, you have to create your index pattern, visualizations and dashboards. 
+Kibana is connected to Elasticsearch to query data and available at `http://localhost:5601`.
+Index pattern named `lights-` can be created importing `kibana/index_pattern.ndjson`.
+Visualizations and dashboard based on `lights-` index pattern can be created importing `kibana/dashboard.ndjson`. You have to import `kibana/index_pattern.ndjson` first. The dashboard named `Hue` contains 4 visualizations :
+- Avaibility: displays the time of availability of the lights
+- Current status: displays the lights current status (state on and state reachable)
+- Switch on: displays the number of switch on for each light
+- Uptime: displays the lighting time of the lights
 
 # Prerequisites
 You must have `Docker` installed and a Slack webhook configured to push messages in a Slack channel.
