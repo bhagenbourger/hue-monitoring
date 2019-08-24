@@ -1,0 +1,7 @@
+{
+    "template" : "sensors_template",
+    "index_patterns" : ["sensors-*"],
+    "aliases" : {
+        "sensors" : {}
+    }
+}

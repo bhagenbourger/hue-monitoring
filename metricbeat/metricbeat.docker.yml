@@ -10,7 +10,7 @@ metricbeat.modules:
     - json
   hosts: ["${HUE_HUB_IP}"]
   namespace: "json_namespace"
-  path: "/api/${HUE_API_KEY}/lights"
+  path: "/api/${HUE_API_KEY}"
   method: "GET"
   period: 30s
   enabled: true
