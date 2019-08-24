@@ -13,22 +13,33 @@ The aim of metricbeat is to query your Philips Hue hub API every 30 seconds and 
 Configuration file is here `metricbeat/metricbeat.docker.yml`.
 
 ### Logstash
-Logstash pipeline is defined here: `logstash/pipeline/hue-pipeline.conf`. This pipeline parses JSON sent by metricbeats using a custom filter plugin named `logstash-filter-java_hue` that I have developped and available on github `https://github.com/bhagenbourger/logstash-filter-java_hue`. After parsing JSON, this pipeline insert data into elasticsearch and also check if lights went on since the last metric and sends a message into Slack if true. One document per light and per metric is inserted into elasticsearch.
+Logstash pipeline is defined here: `logstash/pipeline/hue-pipeline.conf`. This pipeline parses JSON sent by metricbeats using a custom filter plugin named `logstash-filter-java_hue` that I have developped and available on github `https://github.com/bhagenbourger/logstash-filter-java_hue`. After parsing JSON, this pipeline insert data into elasticsearch and also check if lights went on since the last metric and sends a message into Slack if true. One document per light and per metric is inserted into elasticsearch and one document per temperature sensor and per metric is inserted into elasticsearch.
 All logstash configuration files are into `logstash` folder.
 
 ### Elasticsearch
 Lights data are stored in daily indices named `lights-%{+YYYY.MM.dd}`. Alias named `lights` contains all `lights-*` indices.
+
+Temperature sensors data are stored in daily indices named `sensors-%{+YYYY.MM.dd}`. Alias named `sensors` contains all `sensors-*` indices.
+
 Indicies and alias are created by `logstash`.
+
 Elasticsearch can be queried at `http://localhost:9200`.
 
 ### Kibana
 Kibana is connected to Elasticsearch to query data and available at `http://localhost:5601`.
-Index pattern named `lights-` can be created importing `kibana/index_pattern.ndjson`.
-Visualizations and dashboard based on `lights-` index pattern can be created importing `kibana/dashboard.ndjson`. You have to import `kibana/index_pattern.ndjson` first. The dashboard named `Hue` contains 4 visualizations :
+
+Index patterns named `lights-` and `sensors-` can be created importing `kibana/index_patterns.ndjson`.
+
+Visualizations and dashboard based on `lights-` and `sensors-` index patterns can be created importing `kibana/dashboards.ndjson`. You have to import `kibana/index_patterns.ndjson` first. 
+
+The dashboard named `Hue` contains 4 visualizations :
+
 - Avaibility: displays the time of availability of the lights
 - Current status: displays the lights current status (state on and state reachable)
 - Switch on: displays the number of switch on for each light
 - Uptime: displays the lighting time of the lights
+
+`Temperature` visualization displays temperature in °C.
 
 # Prerequisites
 You must have `Docker` installed and a Slack webhook configured to push messages in a Slack channel.
