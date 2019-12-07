@@ -32,14 +32,17 @@ Index patterns named `lights-` and `sensors-` can be created importing `kibana/i
 
 Visualizations and dashboard based on `lights-` and `sensors-` index patterns can be created importing `kibana/dashboards.ndjson`. You have to import `kibana/index_patterns.ndjson` first. 
 
-The dashboard named `Hue` contains 4 visualizations :
+The dashboard named `Hue` contains 4 visualizations:
 
 - Avaibility: displays the time of availability of the lights
 - Current status: displays the lights current status (state on and state reachable)
 - Switch on: displays the number of switch on for each light
 - Uptime: displays the lighting time of the lights
 
-`Temperature` visualization displays temperature in °C.
+The dashboard named `Temperature` contains 2 visualizations:
+
+- Temperature metrics: displays the min, max, average and last temperature
+- Temperature timeseries: displays the evolution of the temperature during the time
 
 # Prerequisites
 You must have `Docker` installed and a Slack webhook configured to push messages in a Slack channel.
