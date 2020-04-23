@@ -1,7 +1,7 @@
 version: '3'
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.5.0
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.2
     environment:
       - discovery.type=single-node
     volumes:
@@ -10,13 +10,13 @@ services:
     networks: ['elk']
 
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:7.5.0
+    image: docker.elastic.co/kibana/kibana-oss:7.6.2
     ports: ['5601:5601']
     networks: ['elk']
     depends_on: ['elasticsearch']
 
   metricbeat:
-    image: docker.elastic.co/beats/metricbeat-oss:7.5.0
+    image: docker.elastic.co/beats/metricbeat-oss:7.6.2
     volumes:
       - ./metricbeat/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
     environment:
