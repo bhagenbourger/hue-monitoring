@@ -2,10 +2,10 @@
 The goal of this project is to monitor your Philips Hue with the ELK stack and Slack.
 
 # Description
-This project starts 4 containers corresponding to the ELK stack:
+This project starts 5 containers corresponding to the ELK stack:
 - one container for `metricbeat`
 - one container for `logstash` 
-- one container for `elasticsearch`
+- two containers for `elasticsearch` named `elasticsearch01` and `elasticsearch02`
 - one container for `kibana`
 
 ### Metricbeat
@@ -23,7 +23,7 @@ Temperature sensors data are stored in daily indices named `sensors-%{+YYYY.MM.d
 
 Indicies and alias are created by `logstash`.
 
-Elasticsearch can be queried at `http://localhost:9200`.
+Elasticsearch can be queried at `http://localhost:9201` or `http://localhost:9202`.
 
 ### Kibana
 Kibana is connected to Elasticsearch to query data and available at `http://localhost:5601`.
@@ -52,7 +52,8 @@ You must declare three bash environment variables to run this project:
 - SLACK_ENDPOINT => the Slack endpoint corresponding to the webhook to push messages into Slack
 - HUE_API_KEY => your API key to connect to your Philips Hub
 - HUE_HUB_IP => IP address of your Philips Hub
-- ES01_DATA_FOLDER => Path of the folder in which elasticsearch data is persisted
+- ES01_DATA_FOLDER => Path of the folder in which elasticsearch01 data is persisted
+- ES02_DATA_FOLDER => Path of the folder in which elasticsearch02 data is persisted
 
 To manage your configuration you can declare a `env.sh` file which contains your configuration variables. `env.sh` file is ignored by git. 
 Below an example of `env.sh` content:
@@ -60,7 +61,8 @@ Below an example of `env.sh` content:
 export SLACK_ENDPOINT="<set slack webhook url>"
 export HUE_API_KEY="<set your API KEY>"
 export HUE_HUB_IP="<set your hub IP>"
-export ES01_DATA_FOLDER="<set elasticsearch data persistence folder>"
+export ES01_DATA_FOLDER="<set elasticsearch01 data persistence folder>"
+export ES02_DATA_FOLDER="<set elasticsearch02 data persistence folder>"
 ```
 
 After creating your `env.sh` file, you have to source it in your bash session : `source env.sh`.

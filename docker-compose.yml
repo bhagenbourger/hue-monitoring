@@ -1,19 +1,64 @@
 version: '3'
 services:
-  elasticsearch:
+  elasticsearch01:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.2
     environment:
-      - discovery.type=single-node
+      - node.name=elasticsearch01
+      - cluster.name=docker-cluster
+      - discovery.seed_hosts=elasticsearch02:9300
+      - cluster.initial_master_nodes=elasticsearch01,elasticsearch02
+      - bootstrap.memory_lock=true
+      - path.repo=/usr/share/elasticsearch/data
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     volumes:
       - ${ES01_DATA_FOLDER}:/usr/share/elasticsearch/data
-    ports: ['9200:9200', '9300:9300']
-    networks: ['elk']
+    ports: 
+      - '9201:9200'
+    networks:
+      - 'elk'
+
+  elasticsearch02:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.2
+    environment:
+      - node.name=elasticsearch02
+      - cluster.name=docker-cluster
+      - discovery.seed_hosts=elasticsearch01:9300
+      - cluster.initial_master_nodes=elasticsearch01,elasticsearch02
+      - bootstrap.memory_lock=true
+      - path.repo=/usr/share/elasticsearch/data
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ${ES02_DATA_FOLDER}:/usr/share/elasticsearch/data
+    ports:
+      - '9202:9200'
+    networks:
+      - 'elk'
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:7.6.2
-    ports: ['5601:5601']
-    networks: ['elk']
-    depends_on: ['elasticsearch']
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch01:9200","http://elasticsearch02:9200"]'
+    ports:
+      - '5601:5601'
+    networks:
+      - 'elk'
+    depends_on:
+      - 'elasticsearch01'
+      - 'elasticsearch02'
 
   metricbeat:
     image: docker.elastic.co/beats/metricbeat-oss:7.6.2
@@ -22,19 +67,25 @@ services:
     environment:
       - HUE_HUB_IP=${HUE_HUB_IP}
       - HUE_API_KEY=${HUE_API_KEY}
-    networks: ['elk']
-    depends_on: ['logstash']
+    networks:
+      - 'elk'
+    depends_on:
+      - 'logstash'
 
   logstash:
     build: 
       context: ./logstash
-    ports: ['9600:9600']
+    ports:
+      - '9600:9600'
     volumes:
       - ./logstash/pipeline/:/usr/share/logstash/pipeline/
       - ./logstash/templates/:/usr/share/logstash/templates/
     environment:
       - SLACK_ENDPOINT=${SLACK_ENDPOINT}
-    networks: ['elk']
-    depends_on: ['elasticsearch']
+    networks:
+      - 'elk'
+    depends_on:
+      - 'elasticsearch01'
+      - 'elasticsearch02'
 
 networks: {elk: {}}
