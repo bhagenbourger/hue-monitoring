@@ -82,6 +82,7 @@ services:
       - ./logstash/templates/:/usr/share/logstash/templates/
     environment:
       - SLACK_ENDPOINT=${SLACK_ENDPOINT}
+      - INDICES_TEMPORAL_PATTERN=${INDICES_TEMPORAL_PATTERN}
     networks:
       - 'elk'
     depends_on:

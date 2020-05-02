@@ -54,6 +54,7 @@ You must declare three bash environment variables to run this project:
 - HUE_HUB_IP => IP address of your Philips Hub
 - ES01_DATA_FOLDER => Path of the folder in which elasticsearch01 data is persisted
 - ES02_DATA_FOLDER => Path of the folder in which elasticsearch02 data is persisted
+- INDICES_TEMPORAL_PATTERN => Temporal pattern of indices (for example %{+YYYY.MM} pattern will create monthly indices and %{+YYYY.MM.dd} pattern will create daily indices)
 
 To manage your configuration you can declare a `env.sh` file which contains your configuration variables. `env.sh` file is ignored by git. 
 Below an example of `env.sh` content:
@@ -63,6 +64,7 @@ export HUE_API_KEY="<set your API KEY>"
 export HUE_HUB_IP="<set your hub IP>"
 export ES01_DATA_FOLDER="<set elasticsearch01 data persistence folder>"
 export ES02_DATA_FOLDER="<set elasticsearch02 data persistence folder>"
+export INDICES_TEMPORAL_PATTERN="<set temporal pattern of indices>"
 ```
 
 After creating your `env.sh` file, you have to source it in your bash session : `source env.sh`.
