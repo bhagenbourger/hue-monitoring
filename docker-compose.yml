@@ -1,7 +1,7 @@
 version: '3'
 services:
   elasticsearch01:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.2
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.9.2
     environment:
       - node.name=elasticsearch01
       - cluster.name=docker-cluster
@@ -25,7 +25,7 @@ services:
       - 'elk'
 
   elasticsearch02:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.2
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.9.2
     environment:
       - node.name=elasticsearch02
       - cluster.name=docker-cluster
@@ -49,7 +49,7 @@ services:
       - 'elk'
 
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:7.6.2
+    image: docker.elastic.co/kibana/kibana-oss:7.9.2
     environment:
       ELASTICSEARCH_HOSTS: '["http://elasticsearch01:9200","http://elasticsearch02:9200"]'
     ports:
@@ -61,7 +61,7 @@ services:
       - 'elasticsearch02'
 
   metricbeat:
-    image: docker.elastic.co/beats/metricbeat-oss:7.6.2
+    image: docker.elastic.co/beats/metricbeat-oss:7.9.2
     volumes:
       - ./metricbeat/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
     environment:
