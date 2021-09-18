@@ -81,7 +81,7 @@ services:
       - ./logstash/pipeline/:/usr/share/logstash/pipeline/
       - ./logstash/templates/:/usr/share/logstash/templates/
     environment:
-      - SLACK_ENDPOINT=${SLACK_ENDPOINT}
+      - SLACK_ENDPOINT=${SLACK_ENDPOINT:-"undefined"}
       - INDICES_TEMPORAL_PATTERN=${INDICES_TEMPORAL_PATTERN}
       - ALERT_MESSAGE_LIGHT_REACHABLE=${ALERT_MESSAGE_LIGHT_REACHABLE}
       - ALERT_MESSAGE_LIGHT_NOT_REACHABLE=${ALERT_MESSAGE_LIGHT_NOT_REACHABLE}

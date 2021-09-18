@@ -48,13 +48,15 @@ The dashboard named `Temperature` contains 2 visualizations:
 You must have `Docker` installed and a Slack webhook configured to push messages in a Slack channel.
 
 # Configuration
-You must declare six bash environment variables to run this project:
-- SLACK_ENDPOINT => the Slack endpoint corresponding to the webhook to push messages into Slack
+You must declare five bash environment variables to run this project:
 - HUE_API_KEY => your API key to connect to your Philips Hub
 - HUE_HUB_IP => IP address of your Philips Hub
 - ES01_DATA_FOLDER => Path of the folder in which elasticsearch01 data is persisted
 - ES02_DATA_FOLDER => Path of the folder in which elasticsearch02 data is persisted
 - INDICES_TEMPORAL_PATTERN => Temporal pattern of indices (for example %{+YYYY.MM} pattern will create monthly indices and %{+YYYY.MM.dd} pattern will create daily indices)
+
+You can add an optional bash environment variable to send notification to Slack, if this variable is not set, no notification is sent to Slack:
+- SLACK_ENDPOINT => the Slack endpoint corresponding to the webhook to push messages into Slack
 
 You can also add three optional bash environment variables to customize Slack alert messages, if these variables are not set, default value is used:
 - ALERT_MESSAGE_LIGHT_REACHABLE => message sent to Slack when light comes back reachable, default value is `Light %{[name]} *came back reachable* at %{[@timestamp]}`
