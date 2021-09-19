@@ -26,7 +26,7 @@ Indicies and alias are created by `logstash`.
 Elasticsearch can be queried at `https://localhost:9201` or `https://localhost:9202`.
 
 ### Kibana
-Kibana is connected to Elasticsearch to query data and available at `http://localhost:5601`.
+Kibana is connected to Elasticsearch to query data and available at `https://localhost:5601`.
 
 Index patterns named `lights-` and `sensors-` can be created importing `kibana/index_patterns.ndjson`.
 

@@ -101,6 +101,9 @@ services:
       - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certificates/ca/ca.crt
       - ELASTICSEARCH_SSL_VERIFICATIONMODE=certificate
+      - SERVER_SSL_ENABLED=true
+      - SERVER_SSL_KEY=/usr/share/kibana/config/certificates/kibana/kibana.key
+      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certificates/kibana/kibana.crt
     volumes:
       - certs:/usr/share/kibana/config/certificates
     ports:
