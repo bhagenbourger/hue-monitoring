@@ -23,7 +23,7 @@ Temperature sensors data are stored in daily indices named `sensors-%{+YYYY.MM.d
 
 Indicies and alias are created by `logstash`.
 
-Elasticsearch can be queried at `http://localhost:9201` or `http://localhost:9202`.
+Elasticsearch can be queried at `https://localhost:9201` or `https://localhost:9202`.
 
 ### Kibana
 Kibana is connected to Elasticsearch to query data and available at `http://localhost:5601`.
@@ -44,16 +44,19 @@ The dashboard named `Temperature` contains 2 visualizations:
 - Temperature metrics: displays the min, max, average and last temperature
 - Temperature timeseries: displays the evolution of the temperature during the time
 
+You can use the elastic user to connect, username is `elastic` and password is the value you set in the environment variable named `ELASTICSEARCH_PASSWORD`.  
+
 # Prerequisites
 You must have `Docker` installed and a Slack webhook configured to push messages in a Slack channel.
 
 # Configuration
-You must declare five bash environment variables to run this project:
+You must declare six bash environment variables to run this project:
 - HUE_API_KEY => your API key to connect to your Philips Hub
 - HUE_HUB_IP => IP address of your Philips Hub
 - ES01_DATA_FOLDER => Path of the folder in which elasticsearch01 data is persisted
 - ES02_DATA_FOLDER => Path of the folder in which elasticsearch02 data is persisted
 - INDICES_TEMPORAL_PATTERN => Temporal pattern of indices (for example %{+YYYY.MM} pattern will create monthly indices and %{+YYYY.MM.dd} pattern will create daily indices)
+- ELASTICSEARCH_PASSWORD => The elastic user password
 
 You can add an optional bash environment variable to send notification to Slack, if this variable is not set, no notification is sent to Slack:
 - SLACK_ENDPOINT => the Slack endpoint corresponding to the webhook to push messages into Slack
@@ -72,6 +75,7 @@ export HUE_HUB_IP="<set your hub IP>"
 export ES01_DATA_FOLDER="<set elasticsearch01 data persistence folder>"
 export ES02_DATA_FOLDER="<set elasticsearch02 data persistence folder>"
 export INDICES_TEMPORAL_PATTERN="<set temporal pattern of indices>"
+export ELASTICSEARCH_PASSWORD="<set elasticsearch user password>"
 # Optional paramters
 # export ALERT_MESSAGE_LIGHT_REACHABLE="Light %{[name]} *came back reachable* at %{[@timestamp]}"
 # export ALERT_MESSAGE_LIGHT_NOT_REACHABLE="Light %{[name]} *was no longer reachable* at %{[@timestamp]}"
