@@ -2,7 +2,7 @@ version: '3'
 services:
   create_certs:
       container_name: create_certs
-      image: docker.elastic.co/elasticsearch/elasticsearch:7.14.1
+      image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
       command: >
         bash -c '
           if [[ ! -f /certs/bundle.zip ]]; then
@@ -16,7 +16,7 @@ services:
       volumes: ['certs:/certs', './inventory:/usr/share/elasticsearch/config/certificates']
 
   elasticsearch01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
     environment:
       - node.name=elasticsearch01
       - cluster.name=docker-cluster
@@ -55,7 +55,7 @@ services:
       - create_certs
 
   elasticsearch02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
     environment:
       - node.name=elasticsearch02
       - cluster.name=docker-cluster
@@ -94,7 +94,7 @@ services:
       - create_certs
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.14.1
+    image: docker.elastic.co/kibana/kibana:${ELK_VERSION}
     environment:
       - ELASTICSEARCH_HOSTS=["https://elasticsearch01:9200","https://elasticsearch02:9200"]
       - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
@@ -116,7 +116,7 @@ services:
       - elasticsearch02
 
   metricbeat:
-    image: docker.elastic.co/beats/metricbeat-oss:7.14.1
+    image: docker.elastic.co/beats/metricbeat-oss:${ELK_VERSION}
     volumes:
       - ./metricbeat/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
     environment:
@@ -130,6 +130,9 @@ services:
   logstash:
     build: 
       context: ./logstash
+      dockerfile: Dockerfile
+      args: 
+        ELK_VERSION: ${ELK_VERSION}
     ports:
       - '9600:9600'
     volumes:
