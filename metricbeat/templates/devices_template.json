@@ -1,0 +1,23 @@
+{
+    "template" : "devices_template",
+    "index_patterns" : ["devices-*"],
+    "aliases" : {
+        "devices" : {}
+    },
+    "mappings": {
+        "properties": {
+            "http.device.FirstSeen": {
+                "type": "date"
+            },
+            "http.device.LastChanged": {
+                "type": "date"
+            },
+            "http.device.LastConnection": {
+                "type": "date"
+            },
+            "http.device.IPAddress": {
+                "type": "ip"
+            }
+        }
+    }
+}
