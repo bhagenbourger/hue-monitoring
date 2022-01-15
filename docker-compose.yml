@@ -115,17 +115,29 @@ services:
       - elasticsearch01
       - elasticsearch02
 
-  metricbeat:
+  metricbeat_hue:
     image: docker.elastic.co/beats/metricbeat-oss:${ELK_VERSION}
     volumes:
-      - ./metricbeat/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - ./metricbeat/metricbeat-hue.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
     environment:
       - HUE_HUB_IP=${HUE_HUB_IP}
       - HUE_API_KEY=${HUE_API_KEY}
     networks:
       - 'elk'
-    depends_on:
-      - logstash
+
+  metricbeat_livebox:
+    image: docker.elastic.co/beats/metricbeat-oss:${ELK_VERSION}
+    volumes:
+      - ./metricbeat/metricbeat-livebox.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - ./metricbeat/templates/:/usr/share/metricbeat/templates/
+      - certs:/usr/share/metricbeat/config/certificates
+    environment:
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/metricbeat/config/certificates/ca/ca.crt
+      - INDICES_TEMPORAL_PATTERN=${INDICES_TEMPORAL_PATTERN}
+    networks:
+      - 'elk'
 
   logstash:
     build: 
@@ -152,6 +164,16 @@ services:
     depends_on:
       - elasticsearch01
       - elasticsearch02
+
+  livebox:
+    image: registry.gitlab.com/bhagenbourger/liveboxapi/liveboxapi:${LIVEBOX_API_VERSION}
+    environment:
+      - LIVEBOX_USERNAME=${LIVEBOX_USERNAME}
+      - LIVEBOX_PASSWORD=${LIVEBOX_PASSWORD}
+    ports:
+      - '8080:8080'
+    networks:
+      - 'elk'
 
 networks: {elk: {}}
 volumes: {"certs"}

@@ -1,16 +1,22 @@
 # Hue monitoring
-The goal of this project is to monitor your Philips Hue with the ELK stack and Slack.
+The goal of this project is to monitor your Philips Hue with the ELK stack and Slack.  
+This project also queries devices connected to your local network using your Orange Livebox.
 
 # Description
-This project starts 5 containers corresponding to the ELK stack:
-- one container for `metricbeat`
+This project starts 7 containers corresponding to the ELK stack:
+- two containers for `metricbeat`, one to query Hue Hub API named `metricbeat_hue` and one to query Orange Livebox API named `metricbeat_livebox`
 - one container for `logstash` 
 - two containers for `elasticsearch` named `elasticsearch01` and `elasticsearch02`
 - one container for `kibana`
+- one container for `livebox`, based on `https://gitlab.com/bhagenbourger/liveboxapi` and used to query your Livebox and get devices connected on your local network
 
-### Metricbeat
-The aim of metricbeat is to query your Philips Hue hub API every 30 seconds and send the result to logstash.
-Configuration file is here `metricbeat/metricbeat.docker.yml`.
+### Metricbeat - Hue
+The aim of metricbeat hue is to query your Philips Hue hub API every 30 seconds and send the result to logstash.
+Configuration file is here `metricbeat/metricbeat-hue.docker.yml`.
+
+### Metricbeat - Livebox
+The aim of metricbeat livebox is to query your Livebox API every 10 minutes to get devices connected on your local network and store the result into elasticsearch.
+Configuration file is here `metricbeat/metricbeat-livebox.docker.yml`.
 
 ### Logstash
 Logstash pipeline is defined here: `logstash/pipeline/hue-pipeline.conf`. This pipeline parses JSON sent by metricbeats using a custom filter plugin named `logstash-filter-java_hue` that I have developped and available on github `https://github.com/bhagenbourger/logstash-filter-java_hue`. After parsing JSON, this pipeline insert data into elasticsearch and also check if lights went on since the last metric and sends a message into Slack if true. One document per light and per metric is inserted into elasticsearch and one document per temperature sensor and per metric is inserted into elasticsearch.
@@ -28,9 +34,9 @@ Elasticsearch can be queried at `https://localhost:9201` or `https://localhost:9
 ### Kibana
 Kibana is connected to Elasticsearch to query data and available at `https://localhost:5601`.
 
-Index patterns named `lights-` and `sensors-` can be created importing `kibana/index_patterns.ndjson`.
+Index patterns named `lights-`, `sensors-` and `devices-` can be created importing `kibana/index_patterns.ndjson`.
 
-Visualizations and dashboard based on `lights-` and `sensors-` index patterns can be created importing `kibana/dashboards.ndjson`. You have to import `kibana/index_patterns.ndjson` first. 
+Visualizations and dashboard based on `lights-`, `sensors-` and `devices-` index patterns can be created importing `kibana/dashboards.ndjson`. You have to import `kibana/index_patterns.ndjson` first. 
 
 The dashboard named `Hue` contains 4 visualizations:
 
@@ -44,7 +50,14 @@ The dashboard named `Temperature` contains 2 visualizations:
 - Temperature metrics: displays the min, max, average and last temperature
 - Temperature timeseries: displays the evolution of the temperature during the time
 
+The dashboard named `Devices` contains 1 visualization:
+
+- Devices by interface: displays device type by network interface
+
 You can use the elastic user to connect, username is `elastic` and password is the value you set in the environment variable named `ELASTICSEARCH_PASSWORD`.  
+
+### Orange Livebox API
+This API, based on this project `https://gitlab.com/bhagenbourger/liveboxapi`, exposes an API in front of your Orange Livebox to get devices connected on your local network. 
 
 # Prerequisites
 You must have `Docker` installed and a Slack webhook configured to push messages in a Slack channel.
@@ -66,6 +79,11 @@ You can also add three optional bash environment variables to customize Slack al
 - ALERT_MESSAGE_LIGHT_NOT_REACHABLE => message sent to Slack when light is not reachable, default value is `Light %{[name]} *was no longer reachable* at %{[@timestamp]}`
 - ALERT_MESSAGE_LIGHT_ON => message sent to Slack when light turns on, default value is `<!channel> Light %{[name]} *went on* at %{[@timestamp]}`
 
+You must also declare environment variables for Orange Livebox API:
+- LIVEBOX_ENDPOINT => url to the API endpoint, optional parameter, default value is http://192.168.1.1/ws
+- LIVEBOX_USERNAME => username to connect to the livebox, required parameter
+- LIVEBOX_PASSWORD => password to connect to the livebox, required parameter
+
 To manage your configuration you can declare a `env.sh` file which contains your configuration variables. `env.sh` file is ignored by git. 
 Below an example of `env.sh` content:
 ```
@@ -76,10 +94,18 @@ export ES01_DATA_FOLDER="<set elasticsearch01 data persistence folder>"
 export ES02_DATA_FOLDER="<set elasticsearch02 data persistence folder>"
 export INDICES_TEMPORAL_PATTERN="<set temporal pattern of indices>"
 export ELASTICSEARCH_PASSWORD="<set elasticsearch user password>"
+
 # Optional paramters
 # export ALERT_MESSAGE_LIGHT_REACHABLE="Light %{[name]} *came back reachable* at %{[@timestamp]}"
 # export ALERT_MESSAGE_LIGHT_NOT_REACHABLE="Light %{[name]} *was no longer reachable* at %{[@timestamp]}"
 # export ALERT_MESSAGE_LIGHT_ON="<!channel> Light %{[name]} *went on* at %{[@timestamp]}"
+
+# Orange livebox parameters
+# Optional parameter
+# export LIVEBOX_ENDPOINT="http://192.168.1.1/ws"
+# Required parameters
+export LIVEBOX_USERNAME="<username>"
+export LIVEBOX_PASSWORD="<password>"
 ```
 
 After creating your `env.sh` file, you have to source it in your bash session : `source env.sh`.

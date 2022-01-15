@@ -26,3 +26,10 @@ instances:
       - localhost
     ip:
       - 127.0.0.1
+
+  - name: metricbeat_livebox
+    dns:
+      - metricbeat_livebox
+      - localhost
+    ip:
+      - 127.0.0.1

@@ -1,0 +1,30 @@
+metricbeat.modules:
+- module: http
+  metricsets: 
+    - json
+  hosts: ["livebox:8080"]
+  namespace: "device"
+  path: "/devices"
+  method: "GET"
+  json.is_array: true
+  period: 600s
+  enabled: true
+
+processors:
+  - include_fields:
+      fields: ["http.device"]
+
+output.elasticsearch:
+  hosts: ["elasticsearch01:9200","elasticsearch02:9200"]
+  protocol: https
+  ssl.certificate_authorities: "${ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES}"
+  username: "${ELASTICSEARCH_USERNAME}"
+  password: "${ELASTICSEARCH_PASSWORD}"
+  index: "devices-${INDICES_TEMPORAL_PATTERN}"
+
+setup.template.name: "devices"
+setup.template.pattern: "devices-*"
+setup.template.json.enabled: true
+setup.template.json.path: "/usr/share/metricbeat/templates/devices_template.json"
+setup.template.json.name: "devices_template"
+setup.ilm.enabled: false
